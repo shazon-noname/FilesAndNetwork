@@ -8,4 +8,12 @@ public class Line {
         this.number = number;
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "Line{" +
+                "number='" + number + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

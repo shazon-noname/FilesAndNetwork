@@ -1,13 +1,19 @@
 package org.FilesAndNetwork.model;
 
-import org.jsoup.nodes.Element;
-
 public class Station {
-    String name;
     String lineNumber;
+    String name;
 
-    public Station(String name, String lineNumber) {
-        this.name = name;
+    public Station(String lineNumber,String name ) {
         this.lineNumber = lineNumber;
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Station{" +
+                "lineNumber='" + lineNumber + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

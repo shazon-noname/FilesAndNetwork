@@ -8,35 +8,23 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class MetroParser {
-    private List<Line> lines;
-    private List<Station> stations;
+    private final List<Line> lines;
+    private final List<Station> stations;
 
-    public static void main(String[] args) throws IOException {
-        Document elements = Jsoup.connect("https://skillbox-java.github.io/").get();
-        Elements stations = elements.getElementsByClass("js-metro-stations t-metrostation-list-table");
-        Elements numberofLines = elements.select("span.js-metro-line");
-
-        for (Element element : numberofLines) {
-            String lineNumber = element.attr("data-line");
-            String lineName = element.text();
-            System.out.println(lineNumber + ": " + lineName);
-        }
-
-        for (Element element : stations) {
-            String line = element.text();
-            System.out.println(line);
-        }
+    public MetroParser() {
+        this.lines = new ArrayList<>();
+        this.stations = new ArrayList<>();
     }
 
     public void parse() throws IOException {
         Document elements = Jsoup.connect("https://skillbox-java.github.io/").get();
         parseLines(elements);
         parseStations(elements);
-
     }
 
     private void parseStations(Document elements) {
@@ -58,6 +46,22 @@ public class MetroParser {
             String name = element.text();
             lines.add(new Line(number, name));
         }
+    }
+
+    public List<Line> getLines() {
+        return lines;
+    }
+
+    public List<Station> getStations() {
+        return stations;
+    }
+
+    @Override
+    public String toString() {
+        return "MetroParser{" +
+                "lines=" + lines +
+                ", stations=" + stations +
+                '}';
     }
 }
 
