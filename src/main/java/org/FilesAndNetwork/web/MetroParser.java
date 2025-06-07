@@ -9,10 +9,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MetroParser {
     private final List<Line> lines;
@@ -26,10 +23,17 @@ public class MetroParser {
     }
 
     public void parse() throws IOException {
-        Document doc = Jsoup.connect("https://skillbox-java.github.io/").get();
-        parseLines(doc);
-        parseStations(doc);
-        parseConnections(doc);
+        try {
+            Document doc = Jsoup.connect("https://skillbox-java.github.io/")
+                    .timeout(1000)
+                    .get();
+            if (doc == null) throw new IOException("Failed to uploading document");
+            parseLines(doc);
+            parseStations(doc);
+            parseConnections(doc);
+        } catch (IOException e) {
+            throw new IOException("Error parsing metro: " + e.getMessage());
+        }
     }
 
     private void parseLines(Document doc) {
@@ -45,10 +49,11 @@ public class MetroParser {
         Elements stationElements = doc.select("div.js-metro-stations[data-line]");
         for (Element element : stationElements) {
             String lineNumber = element.attr("data-line");
+            if (lineNumber.isEmpty()) continue;
             Elements stationList = element.select("p.single-station");
             for (Element station : stationList) {
                 String name = station.select("span.name").text();
-                stations.add(new Station(name, lineNumber));
+                if (!name.isEmpty()) stations.add(new Station(name, lineNumber));
             }
         }
     }
