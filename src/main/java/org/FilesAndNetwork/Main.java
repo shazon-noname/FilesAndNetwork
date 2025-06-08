@@ -5,6 +5,7 @@ import org.FilesAndNetwork.web.model.*;
 import org.FilesAndNetwork.web.parser.CSVParser;
 import org.FilesAndNetwork.web.parser.JsonParser;
 import org.FilesAndNetwork.web.parser.MetroParser;
+import org.FilesAndNetwork.web.writer.StationDataWriter;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,5 +63,8 @@ public class Main {
         IntStream.range(0, allDepthsFromCSV.size())
                 .forEach(i -> System.out.println((i+1) + ". " + allDepthsFromCSV.get(i)));
 
+        System.out.println("------Writing metro data to JSON file------");
+        StationDataWriter stationDataWriter = new StationDataWriter();
+        stationDataWriter.write(lines, stations, connections, allDepths, allDepthsFromCSV);
     }
 }
