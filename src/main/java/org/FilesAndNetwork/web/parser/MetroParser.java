@@ -1,4 +1,4 @@
-package org.FilesAndNetwork.web;
+package org.FilesAndNetwork.web.parser;
 
 import org.FilesAndNetwork.web.model.Connection;
 import org.FilesAndNetwork.web.model.Line;
@@ -21,13 +21,13 @@ public class MetroParser {
     public MetroParser() {
         this.lines = new ArrayList<>();
         this.stations = new ArrayList<>();
-        this.connections = new HashSet<>(); // Для автоматического устранения дубликатов
+        this.connections = new HashSet<>();
     }
 
     public void parse() throws IOException {
         try {
             Document doc = Jsoup.connect("https://skillbox-java.github.io/")
-                    .timeout(10000) // Увеличенный таймаут
+                    .timeout(10000)
                     .get();
             parseLines(doc);
             parseStations(doc);
@@ -101,6 +101,6 @@ public class MetroParser {
     }
 
     public List<Connection> getConnections() {
-        return new ArrayList<>(connections); // Конвертируем Set в List
+        return new ArrayList<>(connections);
     }
 }

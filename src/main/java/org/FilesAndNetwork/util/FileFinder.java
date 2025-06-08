@@ -1,4 +1,4 @@
-package org.FilesAndNetwork.file;
+package org.FilesAndNetwork.util;
 
 import java.io.File;
 import java.util.ArrayList;

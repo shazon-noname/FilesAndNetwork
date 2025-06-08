@@ -1,8 +1,8 @@
 package org.FilesAndNetwork.web.model;
 
 public class Station {
-    private final String name;
-    private final String lineNumber;
+    private String name;
+    private String lineNumber;
 
     public Station(String name, String lineNumber) {
         this.name = name;
@@ -15,6 +15,14 @@ public class Station {
 
     public String getLineNumber() {
         return lineNumber;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLineNumber(String lineNumber) {
+        this.lineNumber = lineNumber;
     }
 
     @Override
