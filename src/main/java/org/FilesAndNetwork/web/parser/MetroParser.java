@@ -71,7 +71,7 @@ public class MetroParser {
             Elements stationsWithTransfers = container.select("p.single-station");
             for (Element stationElement : stationsWithTransfers) {
                 String stationName = stationElement.select("span.name").text();
-                Elements transferIcons = stationElement.select("span.t-icon-metroln");
+                Elements transferIcons = stationElement.select("span.t-icon-metroln, span.t-icon-metrost");
 
                 for (Element icon : transferIcons) {
                     String transferLine = icon.className().split(" ")[1].replace("ln-", "");

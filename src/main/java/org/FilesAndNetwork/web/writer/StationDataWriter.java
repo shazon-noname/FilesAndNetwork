@@ -62,14 +62,16 @@ public class StationDataWriter {
             }
 
             if (depthMap.containsKey(station.getName())) {
-                try {
-                    stationNode.put("depth", Double.parseDouble(depthMap.get(station.getName())));
-                } catch (NumberFormatException ignored) {}
+                String depthValue = depthMap.get(station.getName());
+                if (!depthValue.isEmpty()) {
+                    try {
+                        stationNode.put("depth", Double.parseDouble(depthValue));
+                    } catch (NumberFormatException e) {
+                        stationNode.put("depth", depthValue);
+                    }
+                }
             }
-
-            if (connectionStations.contains(station.getName())) {
-                stationNode.put("hasConnection", true);
-            }
+            stationNode.put("hasConnection", connectionStations.contains(station.getName()));
 
             stationsArray.add(stationNode);
         }
