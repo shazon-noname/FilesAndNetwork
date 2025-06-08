@@ -29,7 +29,7 @@ public class Main {
         System.out.println();
 
         FileFinder fileFinder = new FileFinder();
-        List<File> files = fileFinder.findFiles("data", "csv");
+        List<File> files = fileFinder.findFiles("data", "csv", "json");
         files.forEach(System.out::println);
     }
 }

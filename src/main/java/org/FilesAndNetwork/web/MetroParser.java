@@ -10,24 +10,25 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MetroParser {
     private final List<Line> lines;
     private final List<Station> stations;
-    private final List<Connection> connections;
+    private final Set<Connection> connections;
 
     public MetroParser() {
         this.lines = new ArrayList<>();
         this.stations = new ArrayList<>();
-        this.connections = new ArrayList<>();
+        this.connections = new HashSet<>(); // Для автоматического устранения дубликатов
     }
 
     public void parse() throws IOException {
         try {
             Document doc = Jsoup.connect("https://skillbox-java.github.io/")
-                    .timeout(1000)
+                    .timeout(10000) // Увеличенный таймаут
                     .get();
-            if (doc == null) throw new IOException("Failed to uploading document");
             parseLines(doc);
             parseStations(doc);
             parseConnections(doc);
@@ -63,6 +64,7 @@ public class MetroParser {
         for (Station station : stations) {
             stationMap.put(station.getName() + "_" + station.getLineNumber(), station);
         }
+
         Elements stationContainers = doc.select("div.js-metro-stations[data-line]");
         for (Element container : stationContainers) {
             String lineNumber = container.attr("data-line");
@@ -70,13 +72,20 @@ public class MetroParser {
             for (Element stationElement : stationsWithTransfers) {
                 String stationName = stationElement.select("span.name").text();
                 Elements transferIcons = stationElement.select("span.t-icon-metroln");
+
                 for (Element icon : transferIcons) {
                     String transferLine = icon.className().split(" ")[1].replace("ln-", "");
-                    String transferStationName = icon.attr("title").replace("переход на станцию «", "").replace("»", "").split(" ")[0];
+                    String title = icon.attr("title");
+
+                    Pattern pattern = Pattern.compile("«([^»]+)»");
+                    Matcher matcher = pattern.matcher(title);
+                    if (!matcher.find()) continue;
+                    String transferStationName = matcher.group(1).trim();
+                    Station currentStation = stationMap.get(stationName + "_" + lineNumber);
                     Station transferStation = stationMap.get(transferStationName + "_" + transferLine);
-                    if (transferStation != null) {
-                        Station currentStation = stationMap.get(stationName + "_" + lineNumber);
-                        connections.add(new Connection(currentStation, transferStation));
+                    if (currentStation != null && transferStation != null) {
+                        Connection connection = new Connection (currentStation, transferStation);
+                        connections.add(connection);
                     }
                 }
             }
@@ -92,6 +101,6 @@ public class MetroParser {
     }
 
     public List<Connection> getConnections() {
-        return connections;
+        return new ArrayList<>(connections); // Конвертируем Set в List
     }
 }
