@@ -29,9 +29,6 @@ public class StationInfo {
 
     @Override
     public String toString() {
-        return "StationInfo{" +
-                "name='" + name + '\'' +
-                ", date='" + date + '\'' +
-                '}';
+        return "Станция: " + name + ", Дата открытия: " + date;
     }
 }
